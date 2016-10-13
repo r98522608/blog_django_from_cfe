@@ -8,6 +8,7 @@ DATABASES = {
 
 # Static asset configuration
 # STATIC_ROOT = 'statics'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")  
 
