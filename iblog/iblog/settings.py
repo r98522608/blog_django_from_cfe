@@ -139,11 +139,13 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 STATICFILES_DIRS = [
             os.path.join(BASE_DIR, "static"),
-            # os.path.join(BASE_DIR, ,"media"),
+            os.path.join(BASE_DIR, "media"),
                 ]
 
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),"../", "static_cdn")
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),"../", "media_cdn")
+# STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),"../", "static_cdn")
+# MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),"../", "media_cdn")
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media")
 
 
 import dj_database_url
