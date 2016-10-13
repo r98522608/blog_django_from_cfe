@@ -1,0 +1,19 @@
+h1 {
+	color: #777777
+}
+.jumbotron { margin-bottom: -30px; background-color:Cornsilk; }
+.jumbotron h2{ color: red;}
+.breadcrumb {background-color: GhostWhite  ;}
+
+.wmd-panel {	
+	margin-right: 0px !important;
+	margin-left: 0px !important;
+}
+
+.comment-reply {
+	 display:none
+ }
+
+.post-detail-item p {
+		text-indent: 30px;
+}

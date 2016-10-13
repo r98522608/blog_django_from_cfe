@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+
+    {% block content %}
+    <div class="col-xs-12 col-sm-8 col-sm-offset-0">
+    <!-- <h1> {{ title }} </h1> -->
+    <form method="get" action="" class="row">
+      <div class="col-xs-12 col-sm-8">
+        <div class="input-group">
+        <input class="form-control" type="text" name="q" placeholder="Search posts" value="{{ request.GET.q }}"/>
+        <span class="input-group-btn">
+          <!-- <input class="btn btn-default" type="submit"  value="Search" /> -->
+          <button class="btn btn-default" type="submit">Search <i class="fa fa-search" aria-hidden="true">!</i></button>
+        </span>
+      </div>
+    </div>
+    </form>
+    {% for obj in queryset %}
+    <!-- {{ obj.id }} -->
+    <div class="row">
+    <div class="col-sm-12">
+        <div class="thumbnail">
+          {%  if obj.image %}
+          <img src='{{ obj.image.url }}' class="img-responsive" />
+          {%  endif %}
+            <!-- <img src="..." alt="..."> -->
+            <div class="caption post-detail-item">
+                <h3><a href='{{ obj.get_absolute_url }}'>{{ obj.title }}</a>
+                  <small>{{ obj.publish }}</small></h3>
+                  <hr>
+                  <p class="content-markdown">{{ obj.get_markdown|truncatechars_html:120 }}</p>
+                <hr>
+                <p><a href='{{ obj.get_absolute_url }}' class="btn btn-primary" role="button">View article</a> <a href='{{ obj.get_absolute_url }}edit' class="btn btn-default" role="button">Edit</a></p>
+            </div>
+        </div>
+    </div>
+    <hr>
+  </div>
+
+
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if queryset.has_previous %}
+            <a href="?{{ page_var }}={{ queryset.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ queryset.number }} of {{ queryset.paginator.num_pages }}.
+        </span>
+
+        {% if queryset.has_next %}
+            <a href="?{{ page_var }}={{ queryset.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+        {% endif %}
+    </span>
+</div>
+</div>
+{% endblock content %}
+
+{% block side_content %}
+  <h3>Recently updated </h2>
+  <ul class="nav nav-tabs nav-stacked">
+    {% for obj in queryset %}
+      <li><a href="{{ obj.get_absolute_url }}">{{ obj.title }} | <small>{{ obj.publish|timesince}} </small> </a></li>
+    {% endfor %}
+  </ul>
+{% endblock side_content %}

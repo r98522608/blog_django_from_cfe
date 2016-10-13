@@ -1,0 +1,175 @@
+{% load staticfiles %}
+<html>
+
+<head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<title>{% block head_title %}iIves' Blog{% endblock head_title %}</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+	<link rel="stylesheet" href='{%	static "css/base.css" %}'>
+{% block head_extra %}{% endblock head_extra %}
+</head>
+
+<body>
+
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.7";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+	{% include "msg.html" %}
+	<nav	class="navbar navbar-default navbar-fixed-top"	role="navigation">
+		<button	type="button"	class="navbar-toggle	collapsed"
+			data-toggle="collapse"	data-target="#navbar"	aria-expanded="false"	aria-controls="navbar">
+			<span	class="sr-only">Toggle	navigation</span>
+			<span	class="icon-bar"></span>
+			<span	class="icon-bar"></span>
+			<span	class="icon-bar"></span>
+		</button>
+		<div	id="navbar"	class="navbar-collapse	collapse">
+				<ul	class="nav	navbar-nav">
+					<li	class="active"><a	href="#">Home</a></li>
+					<li><a	href="#">About</a></li>
+					<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown"
+									 role="button" aria-haspopup="true" aria-expanded="false">
+									 Blog <span class="caret"></span></a>
+									<ul class="dropdown-menu">
+											<li><a href="#">Embedded</a></li>
+											<li><a href="#">Openstack</a></li>
+											<li role="separator" class="divider"></li>
+											<li class="dropdown-header">Other</li>
+											<li><a href="#">Gallery</a></li>
+									</ul>
+					</li>
+					<li><a	href="#">Category</a></li>
+					<li><a	href="#">Contact</a></li>
+				</ul>
+				<ul	class="nav navbar-nav navbar-right">
+					{% if not request.user.is_authenticated %}
+					<li><a	href="/register/">Register</a></li>
+					<li><a	href="/login/">Login</a></li>
+					<li><a	href=""> </a></li>
+					{% else %}
+					<li><a	href="/logout/">Logout</a></li>
+					<li><a	href=""> </a></li>
+					{% endif %}
+				</ul>
+		</div>
+	</nav>
+	<header class="jumbotron">
+		<div class="container">
+				<div class="row row-header">
+						<div class="col-xs-12 col-sm-8">
+								<h2>Ives' lab</h2>
+								<p>Work hard, play Harder!</p>
+						</div>
+				</div>
+		</div>
+	</header>
+	<ol class="breadcrumb">
+		<li><a href="/">Home</a></li>
+		{% block post_detail_link %}
+		{% endblock %}
+	</ol>
+
+<div class="container">
+  <p>
+	<a href="{%	static "css/base.css" %}"> debug</a>
+	</p>
+{% block content %} {% endblock content %}
+		<div class="col-xs-12 col-sm-1">
+
+		</div>
+		<!-- <div class="col-xs-12 col-sm-3 col-sm-offset sidebar"> -->
+		<!-- <div class="span2 sidebar"> -->
+		<div class="col-xs-12 col-sm-3 col-sm-offset side-box">
+		<h3>Ads </h2>
+		<ul class="nav nav-tabs nav-stacked" style="border:solid;border-color:#3C754C">
+				<li><a href="#">Another Link 1</a></li>
+				<li><a href="#">Another Link 2</a></li>
+				<li><a href="#">Another Link 3</a></li>
+		</ul>
+		{% block side_content %}
+		{% endblock side_content %}
+		</div>
+</div>
+
+
+
+
+
+	<!-- Latest compiled and minified JavaScript -->
+<script   src="http://code.jquery.com/jquery-1.12.4.min.js"   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="   crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js" >
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $(".content-markdown").each(function(){
+	// $(".post-detail-item p").each(function(){
+		var content = $(this).text()
+		// console.log(content)
+		var markedContent = marked(content)
+		// console.log(markedContent)
+		// $(this).addClass("markdown-text")
+		$(this).html(markedContent)
+	})
+
+	// for render responsive img
+	$(".post-detail-item img").each(function(){
+		$(this).addClass("img-responsive")
+	})
+
+	// for render in-time title & content update
+	var contentInput = $("#id_content")
+	function setContent(value){
+		var markedContent = marked(value)
+		$("#preview-content").html(markedContent)
+		$("#preview-content img").each(function(){
+			$(this).addClass("img-responsive")
+		})
+	}
+  setContent(contentInput.val())
+	contentInput.keyup(function(){
+		var newContent = $(this).val()
+		setContent(newContent)
+	})
+
+	var titleInput = $("#id_title")
+	function setTitle(value){
+		$("#preview-title").text(value)
+	}
+	setTitle(titleInput.val())
+	titleInput.keyup(function(){
+		var newContent = $(this).val()
+		setTitle(newContent)
+	})
+
+	$(".comment-reply-btn").click(function(event){
+		event.preventDefault();
+		$(this).parent().next(".comment-reply").fadeToggle();
+	})
+
+
+
+})
+</script>
+
+
+
+</body>
+
+
+</html>

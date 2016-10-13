@@ -1,0 +1,10 @@
+django_env
+static_cdn
+media_cdn
+iblog/posts/migrations/00*
+iblog/comments/migrations/00*
+iblog/iblog/migrations/00*
+*.pyc
+__pycache__
+staticfiles
+db.sqlite3

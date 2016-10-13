@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{%  load urlify %}
+{%  load crispy_forms_tags %}
+
+
+
+{% block content %}
+<!-- {{ object }} -->
+
+<div class="col-xs-12 col-sm-8 col-sm-offset-0">
+  <p>{{  comm.content }}</p>
+  <footer>via {{ comm.user }} | {{ comm.timestamp|timesince }} ago |
+  {%  if comm.children.count > 0 %}
+  {{ comm.children.count }} Comment{%  if comm.children.count > 1 %}s{%  endif %} |
+  {%  endif %}
+  {% if request.user == comm.user %}<a href="{{ comm.get_delete_url }}">Delete</a>{% endif %}
+</footer><hr/>
+  <div >
+    {% for comm_child in comm.children %}
+      <blockquote>
+        <!-- {{ comm_child.id }} -->
+        <p>{{  comm_child.content }}</p>
+        <footer>via {{ comm_child.user }} | {{ comm_child.timestamp|timesince }} ago |
+        {% if request.user == comm_child.user %}<a href="{{ comm_child.get_delete_url }}">Delete</a>{% endif %}
+        </footer>
+      </blockquote>
+    {% endfor %}
+    {% if request.user.is_authenticated %}
+    <form class="" action="." method="post"> {%  csrf_token %}
+    {{ form|crispy }}
+    <input type="hidden" name="parent_id" value="{{ comm.id }}">
+    <input type="submit" class="btn btn-default" value="Reply">
+    </form>
+    {% else %}<p><a href="/login/">Login</a> to comment</p>
+    {% endif %}
+  </div>
+<hr/>
+
+</div>
+{% endblock content %}

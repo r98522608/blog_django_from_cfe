@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{%  load urlify %}
+{%  load crispy_forms_tags %}
+
+
+{% block post_detail_link %}
+<li><a href="{{ queryset.get_absolute_url }}">{{ queryset.title }}</a></li>
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="col-xs-12 col-sm-8 col-sm-offset-0">
+
+  {% if queryset.image %}
+  <img src='{{ queryset.image.url }}' class="img-responsive" />
+  {% endif %}
+    <h1> {{ title }}
+      <small>
+        {%  if  queryset.draft %}<span style="color:red">Draft</span>{%  endif %}
+        {{ queryset.publish }}
+      </small>
+</h1>
+<!-- <p> Read time: {% if queryset.read_time <= 1 %} < 1 Minute {% else %} {{ queryset.read_time}} Minutes {% endif %}</p> -->
+<p> Read time: {% if queryset.read_time|time:'i' <= "01" %} < 1 Minute {% else %} {{ queryset.read_time|time:"i" }} Minutes {% endif %}</p>
+{%  if queryset.user.get_full_name %}
+<p>Author: {{ queryset.user.get_full_name }}</p>
+<p>
+<div class="fb-like" data-href={{ request.build_absolute_uri }} data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+</p>
+<hr/>
+{%  endif %}
+<!-- {{ queryset.content|urlify }} -->
+<!-- <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}/">
+Facebook
+</a>
+<a href="https://twitter.com/home?status={{ share_string }}%20{{ request.build_absolute_uri }}/">
+Share on Twitter
+</a> -->
+<div class="row">
+  <div class="column-sm-12 ">
+    <div class="post-detail-item">{{ queryset.get_markdown }}<br></div>
+
+      <div>  <p class="lead">Comments </p><hr/>
+        {% if request.user.is_authenticated %}
+        <form class="" action="." method="post">{%  csrf_token %}
+        {{ comment_form|crispy }}
+        <input type="submit" class="btn btn-default" value="Post Comment">
+        </form>
+        {% else %}<p><a href="/login/">Login</a> to comment</p>
+        <hr/>
+        {% endif %}
+        <!-- {{ comments }} -->
+        {% for comm in comments %}
+        {{ comm.id }}
+          <blockquote>
+            <p>{{  comm.content }}</p>
+            <footer>via {{ comm.user }} | {{ comm.timestamp|timesince }} ago |
+            {%  if comm.children.count > 0 %}
+            {{ comm.children.count }} Comment{%  if comm.children.count > 1 %}s{%  endif %} |
+            {%  endif %}
+              <a href="#" class="comment-reply-btn"> Reply | </a>
+              <a href="{{ comm.get_absolute_url }}" >Thread</a>
+            </footer>
+            <div class="comment-reply">
+              {% for comm_child in comm.children %}
+                <blockquote>
+                  {{ comm_child.id }}
+                  <p>{{  comm_child.content }}</p>
+                  <footer>via {{ comm_child.user }} | {{ comm_child.timestamp|timesince }} ago</footer>
+                </blockquote>
+              {% endfor %}
+
+              {% if request.user.is_authenticated %}
+              <form class="" action="." method="post"> {%  csrf_token %}
+              {{ comment_form|crispy }}
+              <input type="hidden" name="parent_id" value="{{ comm.id }}">
+              <input type="submit" class="btn btn-default" value="Reply">
+              </form>
+              {% endif %}
+          </div>
+          </blockquote>
+          <hr/>
+        {% endfor %}
+      </div>
+    </div>
+</div>
+<!-- <div class="fb-comments" data-href={{ request.build_absolute_uri }} data-numposts="5"></div> -->
+</div>
+{% endblock content %}
